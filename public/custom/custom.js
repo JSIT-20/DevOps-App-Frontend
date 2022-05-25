@@ -1,4 +1,5 @@
 function getLink(){
+	$('#loader').removeClass("hide-loader");
 	var start = document.getElementById("busStopStart").value;
 	var end = document.getElementById("busStopEnd").value;
 	var goodStop = true;
@@ -33,7 +34,7 @@ function getLink(){
 			catch{
 				goodStop = false;
 			}
-
+			$('#loader').addClass("hide-loader");
 			if(goodStop){
 				var url = "/getroutes?start=" + start + "&end=" + end;
 				location.href = url;
