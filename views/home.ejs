@@ -107,6 +107,29 @@
 		<div class="loader hide-loader" id="loader"></div>
 	</div>	
 </div>
+<h2>Saved Trips</h2>
+<table class="table table-bordered table-hover">
+<thead>
+<tr>
+<th></th>
+<th>Trip Name</th>
+<th>Start Stop</th>
+<th>End Stop</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<% for(let i = 0; i< savedTrips.length; i++){ %>
+	<tr>
+		<td><a href="/deletesavedtrip/<%=i%>"><span class="glyphicon glyphicon-trash text-danger"></span></a></td>
+		<td><%= savedTrips[i].name %></td>
+		<td><%= savedTrips[i].start_stop %></td>
+		<td><%= savedTrips[i].end_stop %></td>
+		<td><a href="/getroutes?start=<%= savedTrips[i].start_stop %>&end=<%= savedTrips[i].end_stop %>" class="btn btn-primary">See Details</a></td>
+	</tr>
+<% } %>
+</tbody>
+</table>
 
 <!-- End of Modified Content -->
 <div class="pagedetails">

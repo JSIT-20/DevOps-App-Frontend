@@ -100,18 +100,47 @@
 </tr>
 </thead>
 <tbody>
+<!-- route.Trips not array if single trip for route -->
 <% for(let route of routes){ %>
-	<% for(let trip of route.Trips){ %>
+	<% if(Array.isArray(route.Trips)){for(let trip of route.Trips){ %>
 	<tr>
 		<td><%= route.RouteNo %></td>
 		<td><%= route.RouteHeading %></td>
 		<td><%= trip.TripDestination %></td>
 		<td><%= trip.AdjustedScheduleTime %></td>
 	</tr>
+	<% }} %>
+	<% if(!Array.isArray(route.Trips)){ %>
+	<tr>
+		<td><%= route.RouteNo %></td>
+		<td><%= route.RouteHeading %></td>
+		<td><%= route.Trips.TripDestination %></td>
+		<td><%= route.Trips.AdjustedScheduleTime %></td>
+	</tr>
 	<% } %>
 <% } %>
 </tbody>
 </table>
+<h2>Save Trip</h2>
+<div class="panel panel-default">
+	<div class="panel-body">
+		<form method="get" action="/savetrip">
+			<div class="form-group">
+				<label for="tripName">Trip Name</label>
+				<input required type="text" name="tripName">
+			</div>
+			<div class="form-group">
+				<label for="startStop">Start Stop</label>
+				<input value="<%= startStop%>" type="text" name="startStop">
+			</div>
+			<div class="form-group">
+				<label for="endStop">End Stop</label>
+				<input value="<%= endStop%>" type="text" name="endStop">
+			</div>
+			<button type="submit" class="btn btn-primary">Save Trip</button>
+		</form>
+	</div>
+</div>
 <a href="/" class="btn btn-primary">Back</a>
 <!-- End of Modified Content -->
 <div class="pagedetails">

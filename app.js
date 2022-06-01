@@ -7,8 +7,20 @@ app.use(express.static('public'));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.get('/', (req, res) =>{
-	res.render('home');
+app.get('/', async (req, res) =>{
+	try{
+		var data = await loadSavedTrips();
+		if(data.data.Status == "200"){
+			res.render('home', {savedTrips: data.data.Trips});
+		}
+		else{
+			res.render('error');
+		}
+	}
+	catch(error){
+		res.render('error');
+	}
+
 });
 
 app.get('/getroutes', async (req, res) =>{
@@ -17,7 +29,7 @@ app.get('/getroutes', async (req, res) =>{
 		var endStop = req.query.end;
 		var data = await loadRoutesFromAPI(startStop, endStop);
 		if(data.data.Status == "200"){
-			res.render('getroutes', {routes: data.data.Routes});
+			res.render('getroutes', {routes: data.data.Routes, startStop: startStop, endStop: endStop});
 		}
 		else{
 			res.render('error');
@@ -39,6 +51,37 @@ app.get('/validatestop', async (req, res) =>{
 		var result = {"Status": "500"}
 	}
 	res.json(result.data);
+});
+
+app.get('/savetrip', async (req, res) =>{
+	try{
+		var data = await postTrip(req.query.tripName, req.query.startStop, req.query.endStop);
+		if(data.data.Status == "200"){
+			res.redirect('/');
+		}
+		else{
+			res.render('error');
+		}
+	}
+	catch(error){
+		res.render('error');
+	}
+
+});
+
+app.get('/deletesavedtrip/:id', async(req, res) =>{
+	try{
+		var data = await deleteTrip(req.params.id);
+		if(data.data.Status == "200"){
+			res.redirect("/");
+		}
+		else{
+			res.render('error');
+		}
+	}
+	catch(error){
+		res.render('error');
+	}
 });
 
 app.listen(8080, ()=>{
@@ -65,6 +108,45 @@ const loadRouteValidation = async (stop) => {
 	}
 	catch(error){
 		console.log('Error occured while calling validatestop API');
+		console.log(error);
+	}
+}
+
+const loadSavedTrips = async () => {
+	try{
+		var url = "http://localhost:8081/savedtrips";
+		const response = await axios.get(url);
+		return response;
+	}
+	catch(error){
+		console.log('Error occured while calling get savedtrips API');
+		console.log(error);
+	}
+}
+
+const postTrip = async (tripName, startStop, endStop) => {
+	try{
+		var url = "http://localhost:8081/savedtrips";
+		var payload = {"name": tripName, "start_stop": startStop, "end_stop": endStop}
+		console.log(payload)
+		const response = await axios.post(url, payload);
+		return response;
+	}
+	catch(error){
+		console.log("Error occured while calling post savedtrips API");
+		console.log(error);
+	}
+}
+
+const deleteTrip = async (tripId) =>{
+	try{
+		var url = "http://localhost:8081/savedtrips/" + tripId
+		console.log(url);
+		const response = await axios.delete(url);
+		return response;
+	}
+	catch(error){
+		console.log("Error occured while calling delete savedTrip API");
 		console.log(error);
 	}
 }
