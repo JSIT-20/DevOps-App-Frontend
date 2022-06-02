@@ -1,8 +1,11 @@
 function getLink(){
 	$('#loader').removeClass("hide-loader");
+	$("#startStopError").addClass("hidden");
+	$("#endStopError").addClass("hidden");
 	var start = document.getElementById("busStopStart").value;
 	var end = document.getElementById("busStopEnd").value;
-	var goodStop = true;
+	var goodStart = true;
+	var goodEnd = true;
 	fetch("http://localhost:8080/validatestop?stop=" + start)
 		.then((res) =>{
 			return res.json();
@@ -10,40 +13,48 @@ function getLink(){
 		.then((data) =>{
 			try{
 				if(data.Status == "500"){
-					goodStop = false;
+					goodStart = false;
 				}
 			}
 			catch{
-				goodStop = false;
+				goodStart = false;
 			}
-		})
-		.catch((e) =>{
-			console.log("Error when trying to fetch from api (validatestop)")
-		})
+			fetch("http://localhost:8080/validatestop?stop=" + end)
+				.then((res) =>{
+					return res.json();
+				})
+				.then((data) =>{
+					try{
+						if(data.Status == "500"){
+							goodEnd = false;
+						}
+					}
+					catch{
+						goodEnd = false;
+					}
+					$('#loader').addClass("hide-loader");
+					if(goodStart && goodEnd){
+						var url = "/getroutes?start=" + start + "&end=" + end;
+						location.href = url;
+					}
+					else{
+						if(!goodStart){
+							$("#stopStartNumber").text(start);
+							$("#startStopError").removeClass("hidden");
+						}
+						if(!goodEnd){
+							$("#stopEndNumber").text(end);
+							$("#endStopError").removeClass("hidden");
+						}
+					}
+				})
+				.catch((e) =>{
+					console.log("Error when trying to fetch from api (validatestop)")
+				})
+				})
+				.catch((e) =>{
+					console.log("Error when trying to fetch from api (validatestop)")
+				})
 
-	fetch("http://localhost:8080/validatestop?stop=" + end)
-		.then((res) =>{
-			return res.json();
-		})
-		.then((data) =>{
-			try{
-				if(data.Status == "500"){
-					goodStop = false;
-				}
-			}
-			catch{
-				goodStop = false;
-			}
-			$('#loader').addClass("hide-loader");
-			if(goodStop){
-				var url = "/getroutes?start=" + start + "&end=" + end;
-				location.href = url;
-			}
-			else{
-				alert("One of the stops could not be validated, please try again")
-			}
-		})
-		.catch((e) =>{
-			console.log("Error when trying to fetch from api (validatestop)")
-		})
+
 }

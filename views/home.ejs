@@ -98,10 +98,16 @@
 		<div class="form-group">
 			<label for="busStopStart">Start Bus Stop Number</label>
 			<input type="number" class="form-control" name="busStop" id="busStopStart">
+			<div id="startStopError" class="hidden alert alert-danger">
+			    <p>Stop number <span id="stopStartNumber"></span> could not be validated</p>
+			</div>
 		</div>
 		<div class="form-group">
 			<label for="busStopEnd">Destination Bus Stop Number</label>
 			<input type="number" class="form-control" name="busStop" id="busStopEnd">
+			<div id="endStopError" class="hidden alert alert-danger">
+			    <p>Stop number <span id="stopEndNumber"></span> could not be validated</p>
+			</div>
 		</div>
 		<button type="submit" onclick="getLink()" class="btn btn-primary">Return Bus Trips</button>
 		<div class="loader hide-loader" id="loader"></div>
