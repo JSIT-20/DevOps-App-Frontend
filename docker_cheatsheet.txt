@@ -1,0 +1,31 @@
+##General commands
+
+#Stop container
+docker stop <container_id>
+
+#Remove container
+docker rm <container_id>
+
+#Remove image
+docker rmi <image_id>
+
+#Create image (in same location as dockerfile)
+docker build -t <image_name>:<image_tag> .
+
+#Create container
+docker run -p<local_port>:<container_port> <image_name>:<image_tag>
+
+#See all containers
+docker ps -a
+
+#See running containers
+docker ps
+
+#See images
+docker images
+
+#Docker compose start
+docker-compose -f docker-compose.yaml up
+
+#Docker compose end
+docker-compose -f docker-compose.yaml down

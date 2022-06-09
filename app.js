@@ -3,9 +3,14 @@ const express = require('express');
 const app = express();
 const path = require('path');
 
-app.use(express.static('public'));
+app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
+//When running locally without docker
+//const baseUrl = "http://localhost:8081";
+//When running with docker
+const baseUrl = "http://haproxy:8081";
 
 app.get('/', async (req, res) =>{
 	try{
@@ -90,7 +95,7 @@ app.listen(8080, ()=>{
 
 const loadRoutesFromAPI = async (startStop, endStop) => {
 	try{
-		var url = "http://localhost:8081/getroutes?start=" + startStop + "&end=" + endStop;
+		var url = baseUrl + "/getroutes?start=" + startStop + "&end=" + endStop;
 		const response = await axios.get(url);
 		return response;
 	}
@@ -102,7 +107,7 @@ const loadRoutesFromAPI = async (startStop, endStop) => {
 
 const loadRouteValidation = async (stop) => {
 	try{
-		var url = "http://localhost:8081/validatestop?stop=" + stop;
+		var url = baseUrl + "/validatestop?stop=" + stop;
 		const response = await axios.get(url);
 		return response; 
 	}
@@ -114,7 +119,7 @@ const loadRouteValidation = async (stop) => {
 
 const loadSavedTrips = async () => {
 	try{
-		var url = "http://localhost:8081/savedtrips";
+		var url = baseUrl + "/savedtrips";
 		const response = await axios.get(url);
 		return response;
 	}
@@ -126,7 +131,7 @@ const loadSavedTrips = async () => {
 
 const postTrip = async (tripName, startStop, endStop) => {
 	try{
-		var url = "http://localhost:8081/savedtrips";
+		var url = baseUrl + "/savedtrips";
 		var payload = {"name": tripName, "start_stop": startStop, "end_stop": endStop}
 		console.log(payload)
 		const response = await axios.post(url, payload);
@@ -140,7 +145,7 @@ const postTrip = async (tripName, startStop, endStop) => {
 
 const deleteTrip = async (tripId) =>{
 	try{
-		var url = "http://localhost:8081/savedtrips/" + tripId
+		var url = baseUrl + "/savedtrips/" + tripId
 		console.log(url);
 		const response = await axios.delete(url);
 		return response;
