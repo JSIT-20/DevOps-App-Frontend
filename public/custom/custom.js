@@ -6,7 +6,7 @@ function getLink(){
 	var end = document.getElementById("busStopEnd").value;
 	var goodStart = true;
 	var goodEnd = true;
-	fetch("http://localhost:8080/validatestop?stop=" + start)
+	fetch("http://localhost/api/validatestop?stop=" + start)
 		.then((res) =>{
 			return res.json();
 		})
@@ -19,7 +19,7 @@ function getLink(){
 			catch{
 				goodStart = false;
 			}
-			fetch("http://localhost:8080/validatestop?stop=" + end)
+			fetch("http://localhost/api/validatestop?stop=" + end)
 				.then((res) =>{
 					return res.json();
 				})

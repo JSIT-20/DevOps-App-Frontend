@@ -10,13 +10,13 @@ app.set('views', path.join(__dirname, 'views'));
 //When running locally without docker
 //const baseUrl = "http://localhost:8081";
 //When running with docker
-const baseUrl = "http://haproxy:8081";
+const baseUrl = "http://devops-api:8081/api";
 
 app.get('/', async (req, res) =>{
 	try{
 		var data = await loadSavedTrips();
 		if(data.data.Status == "200"){
-			res.render('home', {savedTrips: data.data.Trips});
+			res.render('home');
 		}
 		else{
 			res.render('error');
@@ -30,11 +30,14 @@ app.get('/', async (req, res) =>{
 
 app.get('/getroutes', async (req, res) =>{
 	try{
+		console.log(req.query.start)
+		console.log(req.query.end)
+		console.log(req.query)
 		var startStop = req.query.start;
 		var endStop = req.query.end;
 		var data = await loadRoutesFromAPI(startStop, endStop);
 		if(data.data.Status == "200"){
-			res.render('getroutes', {routes: data.data.Routes, startStop: startStop, endStop: endStop});
+			res.render('getroutes', {startStop: startStop, endStop: endStop});
 		}
 		else{
 			res.render('error');

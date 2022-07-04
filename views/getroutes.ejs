@@ -99,43 +99,24 @@
 <th>Time Until Arrival to Start Stop (min)</th>
 </tr>
 </thead>
-<tbody>
-<!-- route.Trips not array if single trip for route -->
-<% for(let route of routes){ %>
-	<% if(Array.isArray(route.Trips)){for(let trip of route.Trips){ %>
-	<tr>
-		<td><%= route.RouteNo %></td>
-		<td><%= route.RouteHeading %></td>
-		<td><%= trip.TripDestination %></td>
-		<td><%= trip.AdjustedScheduleTime %></td>
-	</tr>
-	<% }} %>
-	<% if(!Array.isArray(route.Trips)){ %>
-	<tr>
-		<td><%= route.RouteNo %></td>
-		<td><%= route.RouteHeading %></td>
-		<td><%= route.Trips.TripDestination %></td>
-		<td><%= route.Trips.AdjustedScheduleTime %></td>
-	</tr>
-	<% } %>
-<% } %>
+<tbody id="routesTBody">
 </tbody>
 </table>
 <h2>Save Trip</h2>
 <div class="panel panel-default">
 	<div class="panel-body">
-		<form method="get" action="/savetrip">
+		<form method="post" action="/api/savetrips">
 			<div class="form-group">
 				<label for="tripName">Trip Name</label>
 				<input required type="text" name="tripName">
 			</div>
 			<div class="form-group">
 				<label for="startStop">Start Stop</label>
-				<input value="<%= startStop%>" type="text" name="startStop">
+				<input value="<%= startStop%>" type="text" name="startStop" id="startInput">
 			</div>
 			<div class="form-group">
 				<label for="endStop">End Stop</label>
-				<input value="<%= endStop%>" type="text" name="endStop">
+				<input value="<%= endStop%>" type="text" name="endStop" id="endInput">
 			</div>
 			<button type="submit" class="btn btn-primary">Save Trip</button>
 		</form>
@@ -253,6 +234,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.js"></script>
 <script src="../wet-boew/js/wet-boew.min.js"></script>
 <script src="../GCWeb/js/theme.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script type="text/javascript" src="../custom/custom.js"></script>
+<script type="text/javascript" src="../custom/getroutes.js"></script>
 </body>
 </html>
